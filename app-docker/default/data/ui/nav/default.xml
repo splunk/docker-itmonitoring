@@ -1,0 +1,10 @@
+<nav color="#22B8EB">
+  <view name="Welcome" />
+  <view name="search" />
+  <view name="docker_overview" default='true' />
+  <view name="docker_stats" />
+  <view name="docker_events" />
+  <view name="docker_log_as_transaction" />
+  <view name="ucp_ops" />
+  <view name="dashboards" />
+</nav>

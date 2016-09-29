@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Welcome</title>
+    <link rel="shortcut icon" href="{{SPLUNKWEB_URL_PREFIX}}/static/img/favicon.ico" />
+        <link rel="stylesheet" type="text/css" href="{{SPLUNKWEB_URL_PREFIX}}/static/css/build/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="{{SPLUNKWEB_URL_PREFIX}}/static/css/build/pages/dashboard-simple-bootstrap.min.css" />
+</head>
+<body class="simplexml preload locale-en">
+<!-- 
+BEGIN LAYOUT
+This section contains the layout for the dashboard. Splunk uses proprietary
+styles in <div> tags, similar to Bootstrap's grid system. 
+-->
+<a class="navSkip" href="#navSkip" tabindex="1">Screen reader users, click here to skip the navigation bar</a>
+<div class="header splunk-header">
+        <div id="placeholder-splunk-bar">
+            <a href="{{SPLUNKWEB_URL_PREFIX}}/app/launcher/home" class="brand" title="splunk &gt; listen to your data">splunk<strong>&gt;</strong></a>
+        </div>
+            <div id="placeholder-app-bar"></div>
+</div>
+<a id="navSkip"></a>
+<div class="dashboard-body container-fluid main-section-body" data-role="main">
+    <div class="dashboard-header clearfix">
+        <h2>Welcome</h2>
+</div>
+<h2>Welcome to the Splunk Enterprise Docker image</h2>
+<p>The Splunk Enterprise Docker image lets you get started with Splunk Enterprise in your development efforts. The image includes a sample app that provides insight into how Splunk Enterprise can monitor Docker machines.</p>
+
+<h2>What this Splunk Enterprise instance contains</h2>
+<p>The Splunk Enterprise Docker instance contains a number of data inputs for monitoring of your Docker instance, including:
+<ul>
+  <li>Docker host and operating system stats (stats, events, inspect, and top)</li>
+  <li>Docker container status, memory used, maximum CPU and memory used per container</li>
+  <li>Docker container logs through the Splunk logging driver</li>
+  <li>HTTP Event Collector data</li>
+</ul>
+
+The image has been configured to receive data from the following data sources:
+<ul>
+  <li>the <a href="http://docs.splunk.com/Documentation/Forwarder/latest/Forwarder/Aboutforwardingandreceiving" target="_blank">Splunk Universal Forwarder</a>, default port 9997</li>
+  <li>the <a href="http://dev.splunk.com/view/event-collector/SP-CAAAE6M" target="_blank">HTTP Event Collector</a>, default port 8088</li>
+  <li>the <a href="https://docs.docker.com/engine/admin/logging/splunk/" target="_blank">Splunk Logging Driver for docker</a>, default port 8088</li>
+  <li>Syslog UDP/TCP, default port 1514</li>
+</ul>
+</p>
+
+The image also includes the following enabled data collection configurations:
+<ul><li>Docker stats, top, events, inspect (Requires the /var/run/docker.sock:/var/run/docker.sock:ro volume be present)</li>
+<li>Docker JSON file logging from the docker host (Requires the /var/lib/docker/containers:/host/containers:ro volume be present)</li>
+</ul>
+
+<br>
+<h2>How to use this Docker image</h2>
+<p>After you start the instance, open the Docker Overview page from the Docker app. This app loads a dashboard that shows specifics about your Docker instance, including logs by each container (based on the Splunk logging driver), container status (running versus those that have exited), memory used and available, and container CPU and memory usage.</p>
+
+<br>
+<h2>Get Data In</h2>
+<p>To get the most out of this Docker image as a Splunk developer, see the <a href="http://dev.splunk.com" target="_blank">Splunk Developer Portal.</a>.</p>
+
+<br>
+<h2>Get started with search queries</h2>
+<p>The following sample queries can help you realize value from logs that Splunk collects with the defaul JSON file input collector. To learn more about the Search Processing Language (SPL), see our <a href="https://www.splunk.com/content/dam/splunk2/pdfs/solution-guides/splunk-quick-reference-guide.pdf" target="_blank">Quick Reference Guide</a>.
+    <ul>
+        <li>List count of logs by stdout/stderr: <a href='search?q=search%20*%20sourcetype%3D"container%3Alog"%20%7C%20timechart%20span%3D1h%20count%20by%20stream&sid=1465455975.19&display.page.search.mode=smart&dispatch.sample_ratio=1&earliest=&latest=&display.page.search.tab=visualizations&display.general.type=visualizations&display.visualizations.charting.chart=line'>sourcetype="container:log" | timechart span=1h count by stream</a></li>
+        <li>List of Containers that have been killed due to memory exhaustion: <a href='search?q=search%20sourcetype%3D"dockerinspect"%20State.OOMKilled%3Dtrue%20%7C%20timechart%20span%3D1h%20count%20by%20Name&display.page.search.mode=smart&dispatch.sample_ratio=1&earliest=&latest=&display.page.search.tab=statistics&display.general.type=statistics&display.visualizations.charting.chart=line&sid=1465592039.32'>sourcetype="dockerinspect" State.OOMKilled=true | timechart span=1h count by Name</a></li>
+    </ul>
+</p>
+
+<br>
+<h2>About Splunk Enterprise licensing (and how to get a larger development license for free)</h2>
+<p>This image comes with a trial license that includes 500MB of daily indexing volume. This should cover most applications, but a developer license can provide additional capacity.</p>
+
+<p>You can get a developer license by <a href="http://dev.splunk.com/page/developer_license_sign_up/docker" target="_blank">signing up for it</a>. See the <a href="http://dev.splunk.com/view/splunk-dev-platform-faqs/SP-CAAADRT" target="_blank">Splunk Developer FAQs</a> to learn about the value of a developer license.</p>
+
+<br>
+<h2>Troubleshoot problems with the image</h2>
+<p>If you do not see data when you load the Docker Overview page in the Docker app, confirm that:</p>
+
+<ol>
+<li>You have started the instance with the necessary environment variables.</li>
+<li>You have included the necessary volumes for the Docker image, either from a separate Docker container or by specifying the volumes in the docker run command.</li>
+<li>Your Docker machine has the correct filesystem permissions.</li>
+</ol>
+
+<h3>Configure the correct permissions</h3>
+<p>By default, the collection uses the <a href="https://docs.docker.com/engine/reference/api/docker_remote_api/" target="_blank">Docker Remote API</a> to collect stats, inspect images, 'top' information, and events.
+The container also tries to collect all local JSON files available on the docker host. To ensure that the Splunk Enterprise Docker container has the right access, set the SPLUNK_USER environment variable for the container to "root". 
+You can do this by adding the environment variable to your docker-compose file or by specifying the variable in the 'docker-run' command you use to start the container.<br>
+<br>
+For additional troubleshooting details for this image, see <a href="http://github.com/splunk/docker-itmonitoring/README.md#Troubleshoot-the-splunk-enterprise-docker-image" target="_blank">Troubleshoot the Splunk Enterprise Docker Image</a> on the Splunk GitHub portal.
+For more information about docker logging driver configuration, see <a href="https://docs.docker.com/engine/admin/logging/overview/" target="_blank">Configure logging drivers</a> on Docker Docs. 
+</p>
+
+<br>
+<h2>If you still need help</h2>
+<p>If you continue to have trouble seeing data in the Splunk Enterprise Docker image, try one of the following options:
+<ul>
+  <li>Post a question to <a href="http://answers.splunk.com" target="_blank">Splunk Answers</a>.</li>
+  <li>Join the <a href="http://splunk-usergroups.slack.com" target="_blank">Splunk Slack channel</a></li>
+  <li>Visit the #splunk channel on <a href="http://www.efnet.org" target="_blank">EFNet IRC</a>.</li>
+  <li>Send an email to <a href="mailto:docker-maint@splunk.com" target="_blank">docker-maint@splunk.com</a>.</li>
+</ul>
+</p>
+</div>
+<div class="footer"></div>
+
+<!-- 
+END LAYOUT
+-->
+
+<script src="{{SPLUNKWEB_URL_PREFIX}}/config?autoload=1"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/static/js/i18n.js"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/i18ncatalog?autoload=1"></script>
+<script src="{{SPLUNKWEB_URL_PREFIX}}/static/js/build/simplexml.min/config.js"></script>
+<script type="text/javascript">
+// <![CDATA[
+require.config({
+    baseUrl: "{{SPLUNKWEB_URL_PREFIX}}/static/js",
+    waitSeconds: 0 // Disable require.js load timeout
+});
+//
+// LIBRARY REQUIREMENTS
+//
+// In the require function, we include the necessary libraries and modules for
+// the HTML dashboard. Then, we pass variable names for these libraries and
+// modules as function parameters, in order.
+// 
+// When you add libraries or modules, remember to retain this mapping order
+// between the library or module and its function parameter. You can do this by
+// adding to the end of these lists, as shown in the commented examples below.
+require([
+    "splunkjs/mvc",
+    "splunkjs/mvc/utils",
+    "splunkjs/mvc/tokenutils",
+    "underscore",
+    "jquery",
+    "splunkjs/mvc/simplexml",
+    "splunkjs/mvc/headerview",
+    "splunkjs/mvc/footerview",
+    "splunkjs/mvc/simplexml/dashboardview",
+    "splunkjs/mvc/simplexml/dashboard/panelref",
+    "splunkjs/mvc/simplexml/element/chart",
+    "splunkjs/mvc/simplexml/element/event",
+    "splunkjs/mvc/simplexml/element/html",
+    "splunkjs/mvc/simplexml/element/list",
+    "splunkjs/mvc/simplexml/element/map",
+    "splunkjs/mvc/simplexml/element/single",
+    "splunkjs/mvc/simplexml/element/table",
+    "splunkjs/mvc/simplexml/element/visualization",
+    "splunkjs/mvc/simpleform/formutils",
+    "splunkjs/mvc/simplexml/eventhandler",
+    "splunkjs/mvc/simplexml/searcheventhandler",
+    "splunkjs/mvc/simpleform/input/dropdown",
+    "splunkjs/mvc/simpleform/input/radiogroup",
+    "splunkjs/mvc/simpleform/input/linklist",
+    "splunkjs/mvc/simpleform/input/multiselect",
+    "splunkjs/mvc/simpleform/input/checkboxgroup",
+    "splunkjs/mvc/simpleform/input/text",
+    "splunkjs/mvc/simpleform/input/timerange",
+    "splunkjs/mvc/simpleform/input/submit",
+    "splunkjs/mvc/searchmanager",
+    "splunkjs/mvc/savedsearchmanager",
+    "splunkjs/mvc/postprocessmanager",
+    "splunkjs/mvc/simplexml/urltokenmodel"
+    // Add comma-separated libraries and modules manually here, for example:
+    // ..."splunkjs/mvc/simplexml/urltokenmodel",
+    // "splunkjs/mvc/tokenforwarder"
+    ],
+    function(
+        mvc,
+        utils,
+        TokenUtils,
+        _,
+        $,
+        DashboardController,
+        HeaderView,
+        FooterView,
+        Dashboard,
+        PanelRef,
+        ChartElement,
+        EventElement,
+        HtmlElement,
+        ListElement,
+        MapElement,
+        SingleElement,
+        TableElement,
+        VisualizationElement,
+        FormUtils,
+        EventHandler,
+        SearchEventHandler,
+        DropdownInput,
+        RadioGroupInput,
+        LinkListInput,
+        MultiSelectInput,
+        CheckboxGroupInput,
+        TextInput,
+        TimeRangeInput,
+        SubmitButton,
+        SearchManager,
+        SavedSearchManager,
+        PostProcessManager,
+        UrlTokenModel
+        // Add comma-separated parameter names here, for example: 
+        // ...UrlTokenModel, 
+        // TokenForwarder
+        ) {
+        var pageLoading = true;
+        // 
+        // TOKENS
+        //
+        
+        // Create token namespaces
+        var urlTokenModel = new UrlTokenModel();
+        mvc.Components.registerInstance('url', urlTokenModel);
+        var defaultTokenModel = mvc.Components.getInstance('default', {create: true});
+        var submittedTokenModel = mvc.Components.getInstance('submitted', {create: true});
+        urlTokenModel.on('url:navigate', function() {
+            defaultTokenModel.set(urlTokenModel.toJSON());
+            if (!_.isEmpty(urlTokenModel.toJSON()) && !_.all(urlTokenModel.toJSON(), _.isUndefined)) {
+                submitTokens();
+            } else {
+                submittedTokenModel.clear();
+            }
+        });
+        // Initialize tokens
+        defaultTokenModel.set(urlTokenModel.toJSON());
+        function submitTokens() {
+            // Copy the contents of the defaultTokenModel to the submittedTokenModel and urlTokenModel
+            FormUtils.submitForm({ replaceState: pageLoading });
+        }
+        function setToken(name, value) {
+            defaultTokenModel.set(name, value);
+            submittedTokenModel.set(name, value);
+        }
+        function unsetToken(name) {
+            defaultTokenModel.unset(name);
+            submittedTokenModel.unset(name);
+        }
+        
+        
+        //
+        // SEARCH MANAGERS
+        //
+        //
+        // SPLUNK HEADER AND FOOTER
+        //
+        new HeaderView({
+            id: 'header',
+            section: 'dashboards',
+            el: $('.header'),
+            acceleratedAppNav: true,
+            useSessionStorageCache: true,
+            splunkbar: true,
+            appbar: true,
+            litebar: false,
+        }, {tokens: true}).render();
+        new FooterView({
+            id: 'footer',
+            el: $('.footer')
+        }, {tokens: true}).render();
+        //
+        // DASHBOARD EDITOR
+        //
+        new Dashboard({
+            id: 'dashboard',
+            el: $('.dashboard-body'),
+            showTitle: true,
+            editable: true
+        }, {tokens: true}).render();
+        //
+        // VIEWS: VISUALIZATION ELEMENTS
+        //
+        // Initialize time tokens to default
+        if (!defaultTokenModel.has('earliest') && !defaultTokenModel.has('latest')) {
+            defaultTokenModel.set({ earliest: '0', latest: '' });
+        }
+        submitTokens();
+        //
+        // DASHBOARD READY
+        //
+        DashboardController.ready();
+        pageLoading = false;
+    }
+);
+// ]]>
+</script>
+</body>
+</html>

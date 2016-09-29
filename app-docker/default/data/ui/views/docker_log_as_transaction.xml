@@ -1,0 +1,68 @@
+<form>
+  <label>Reassembled Log Events</label>
+  <fieldset submitButton="false">
+    <input type="time" token="field1" searchWhenChanged="true">
+      <label></label>
+      <default>
+        <earliest>-15m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>JSON File Input for docker</title>
+      <input type="dropdown" token="container_name">
+        <label>Filer- JSON File Input: Container Name</label>
+        <choice value="*">All</choice>
+        <search>
+          <query>|savedsearch available_container_names</query>
+        </search>
+        <fieldForLabel>Name</fieldForLabel>
+        <fieldForValue>Name</fieldForValue>
+        <initialValue>*</initialValue>
+        <default>*</default>
+      </input>
+      <table>
+        <search>
+          <query>|savedsearch reassembled_log_events container_name=$container_name$</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="wrap">true</option>
+        <option name="rowNumbers">false</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Splunk Logging Driver for Docker</title>
+      <input type="dropdown" token="image_id" searchWhenChanged="true">
+        <label>Filter - Splunk Logging Driver: Tag</label>
+        <choice value="*">All</choice>
+        <search>
+          <query>|savedsearch docker_image_name</query>
+        </search>
+        <fieldForLabel>dockerimagename</fieldForLabel>
+        <fieldForValue>dockerimagename</fieldForValue>
+        <default>*</default>
+        <initialValue>*</initialValue>
+      </input>
+      <table>
+        <search>
+          <query>|savedsearch http_log_by_tag image_id=$image_id$</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="wrap">true</option>
+        <option name="rowNumbers">false</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">cell</option>
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+</form>
