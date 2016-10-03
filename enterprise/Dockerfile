@@ -1,5 +1,5 @@
 #https://docs.docker.com/engine/reference/builder/
-FROM splunk/enterprisetrial:6.5.0
+FROM splunk/splunk:6.5.0
 
 ENV SPLUNK_BACKUP_APP ${SPLUNK_BACKUP_DEFAULT_ETC}/etc/apps
 

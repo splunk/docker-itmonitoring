@@ -15,7 +15,7 @@ services:
   splunkenterprise:
 #    build: .
     hostname: splunkenterprisetrial
-    image: splunk/enterprisetrial:6.5.0-monitor
+    image: splunk/splunk:6.5.0-monitor
     environment:
       SPLUNK_START_ARGS: --accept-license --answer-yes
       SPLUNK_ENABLE_LISTEN: 9997
