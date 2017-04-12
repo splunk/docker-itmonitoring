@@ -8,9 +8,7 @@ Want to get going and see the value of this image? Using the following getting s
 
 2. ta-dockerstats:  Uses [Docker Remote API](https://docker.github.io/engine/reference/api/docker_remote_api/) to collect Inspect, Top, and Events in Splunk;  This TA is also used to correlate container ids collected by the ta-dockerlogs_fileinput.
 
-3. ta-dockerstats:  Uses [Docker Remote API](https://docker.github.io/engine/reference/api/docker_remote_api/) to collect Inspect, Top, and Events in Splunk;  This TA is also used to correlate container ids collected by the ta-dockerlogs_fileinput.
-
-4. ta-ucplogs-sysloginput: is used to transform the UCP syslog (TCP/UDP) data in to a ucp source that can be more efficiently analyzed in Splunk.<br>
+3. ta-ucplogs-sysloginput: is used to transform the UCP syslog (TCP/UDP) data in to a ucp source that can be more efficiently analyzed in Splunk.<br>
  
 
 The IT Monitoring is build on top of the Splunk Enterprise and Splunk Universal Forwarder docker images.  For more details about these base images, please refer to the following repos in
