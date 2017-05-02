@@ -1,9 +1,9 @@
 # must accept EULA the first time that the image is started
-# docker run splunk/enterprise:6.5.2
+# docker run splunk/splunk:6.5.2
 # Options on how to review the EULA and accept it: 
-# 1. docker run -it splunk/enterprisetrial:6.5.2
+# 1. docker run -it splunk/splunk:6.5.2
 # 2. Add the following environment variable: SPLUNK_START_ARGS=--accept-license
-# e.g., docker run -e "SPLUNK_START_ARGS=--accept-license" splunk/enterprisetrial 
+# e.g., docker run -e "SPLUNK_START_ARGS=--accept-license" splunk/splunk 
 
 # Support for Docker Compose v2, https://docs.docker.com/compose/overview/
 version: '2'
@@ -25,10 +25,10 @@ services:
     volumes_from:
       - vsplunk
     ports:
-      - "9000:8000"
-      - "9998:9997"
-      - "9088:8088"
-      - "2514:1514"
+      - "8000:8000"
+      - "9997:9997"
+      - "8088:8088"
+      - "1514:1514"
     volumes:
       - /var/lib/docker/containers:/host/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
