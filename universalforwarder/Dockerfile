@@ -1,4 +1,4 @@
-FROM splunk/universalforwarder:6.5.2
+FROM splunk/universalforwarder:6.5.3
 
 ENV SPLUNK_BACKUP_APP ${SPLUNK_BACKUP_DEFAULT_ETC}/etc/apps
 
