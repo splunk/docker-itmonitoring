@@ -1,3 +1,3 @@
-docker push splunk/universalforwarder:6.5.3-monitor
+docker push splunk/universalforwarder:7.0.0-monitor
 
 
