@@ -1,7 +1,7 @@
 # must accept EULA the first time that the image is started
-# docker run splunk/enterprise:6.5.3
+# docker run splunk/enterprise:7.7.0
 # Options on how to review the EULA and accept it: 
-# 1. docker run -it splunk/splunk:6.5.3
+# 1. docker run -it splunk/splunk:7.7.0
 # 2. Add the following environment variable: SPLUNK_START_ARGS=--accept-license
 # e.g., docker run -e "SPLUNK_START_ARGS=--accept-license" splunk/splunk 
 
@@ -21,7 +21,7 @@ services:
   splunkenterprise:
     #build: .
     hostname: splunkenterprise
-    image: splunk/splunk:6.5.3-monitor
+    image: splunk/splunk:7.7.0-monitor
     environment:
       SPLUNK_START_ARGS: --accept-license --answer-yes
       SPLUNK_ENABLE_LISTEN: 9998
@@ -36,7 +36,7 @@ services:
   splunkuniversalforwarder:
 #    build: .
     hostname: splunkuniversalforwarder
-    image: splunk/universalforwarder:6.5.3-monitor
+   image: splunk/universalforwarder:7.7.0-monitor
     environment:
       SPLUNK_START_ARGS: --accept-license --answer-yes
       SPLUNK_FORWARD_SERVER: splunkenterprise:9998

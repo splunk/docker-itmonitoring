@@ -160,7 +160,7 @@
       <title>Logs by Container - File Input</title>
       <chart>
         <search>
-          <query>sourcetype="container:log" | lookup docker_containername containerid as host OUTPUT containername as container_name | search container_name=$container_name$ | timechart count by container_name</query>
+          <query>sourcetype="container:log" | lookup docker_containername.csv containerid as host OUTPUT containername as container_name | search container_name=$container_name$ | timechart count by container_name</query>
           <earliest>$time.earliest$</earliest>
           <latest>$time.latest$</latest>
         </search>
