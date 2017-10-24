@@ -13,7 +13,6 @@ RUN chmod +x ${SPLUNK_BACKUP_APP}/ta-dockerstats/bin/*.sh
 RUN apt-get update \
     && apt-get install -y wget jq \
     && apt-get install -y dnsutils \
-#    && wget -qO ${SPLUNK_BACKUP_APP}/ta-dockerstats/bin/docker https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION} \
     && wget -qO ${SPLUNK_BACKUP_APP}/ta-dockerstats/bin/docker-${DOCKER_VERSION}-ce.tgz https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}-ce.tgz \
     && mkdir ${SPLUNK_BACKUP_APP}/ta-dockerstats/bin/tmp \
     && tar xzvf ${SPLUNK_BACKUP_APP}/ta-dockerstats/bin/docker-${DOCKER_VERSION}-ce.tgz -C ${SPLUNK_BACKUP_APP}/ta-dockerstats/bin/tmp \
