@@ -21,7 +21,7 @@ services:
   splunkenterprise:
     #build: .
     hostname: splunkenterprise
-    image: splunk/splunk:7.7.0-monitor
+    image: splunk/splunk:7.0.0-monitor
     environment:
       SPLUNK_START_ARGS: --accept-license --answer-yes
       SPLUNK_ENABLE_LISTEN: 9998
@@ -36,15 +36,14 @@ services:
   splunkuniversalforwarder:
 #    build: .
     hostname: splunkuniversalforwarder
-   image: splunk/universalforwarder:7.7.0-monitor
+    image: splunk/universalforwarder:7.0.0-monitor
     environment:
       SPLUNK_START_ARGS: --accept-license --answer-yes
       SPLUNK_FORWARD_SERVER: splunkenterprise:9998
       SPLUNK_USER: root
     volumes_from:
       - vsplunk_uf
-    ports:
-      - "8001:8000"
+
     volumes:
       - /var/lib/docker/containers:/host/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
