@@ -6,18 +6,8 @@
 # e.g., docker run -e "SPLUNK_START_ARGS=--accept-license" splunk/splunk 
 
 # Support for Docker Compose v2, https://docs.docker.com/compose/overview/
-version: '2'
+version: '3'
 services:
-  vsplunk:
-    image: busybox
-    volumes:
-      - /opt/splunk/etc
-      - /opt/splunk/var
-  vsplunk_uf:
-    image: busybox
-    volumes:
-      - /opt/splunk/etc
-      - /opt/splunk/var
   splunkenterprise:
     #build: .
     hostname: splunkenterprise
@@ -26,8 +16,9 @@ services:
       SPLUNK_START_ARGS: --accept-license --answer-yes
       SPLUNK_ENABLE_LISTEN: 9998
       SPLUNK_ADD: tcp 1514
-    volumes_from:
-      - vsplunk
+    volumes:
+      - vsplunk-opt-splunk-etc:/opt/splunk/etc
+      - vsplunk-opt-splunk-var:/opt/splunk/var
     ports:
       - "8000:8000"
       - "9997:9997"
@@ -41,11 +32,16 @@ services:
       SPLUNK_START_ARGS: --accept-license --answer-yes
       SPLUNK_FORWARD_SERVER: splunkenterprise:9998
       SPLUNK_USER: root
-    volumes_from:
-      - vsplunk_uf
-
     volumes:
+      - vsplunkuf-opt-splunk-etc:/opt/splunk/etc
+      - vsplunkuf-opt-splunk-var:/opt/splunk/var      
       - /var/lib/docker/containers:/host/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     links:
       - splunkenterprise
+    
+volumes:
+  vsplunk-opt-splunk-etc:
+  vsplunk-opt-splunk-var:
+  vsplunkuf-opt-splunk-etc:
+  vsplunkuf-opt-splunk-var:

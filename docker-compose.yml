@@ -6,13 +6,8 @@
 # e.g., docker run -e "SPLUNK_START_ARGS=--accept-license" splunk/splunk 
 
 # Support for Docker Compose v2, https://docs.docker.com/compose/overview/
-version: '2'
+version: '3'
 services:
-  vsplunk:
-    image: busybox
-    volumes:
-      - /opt/splunk/etc
-      - /opt/splunk/var
   splunkenterprise:
     #build: .
     hostname: splunkenterprise
@@ -30,5 +25,9 @@ services:
       - "8088:8088"
       - "1514:1514"
     volumes:
-      - /var/lib/docker/containers:/host/containers:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - vsplunkuf-opt-splunk-etc:/opt/splunk/etc
+      - vsplunkuf-opt-splunk-var:/opt/splunk/var 
+      
+volumes:
+  vsplunk-opt-splunk-etc:
+  vsplunk-opt-splunk-var:
