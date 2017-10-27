@@ -27,7 +27,7 @@
       <title>Running Containers</title>
       <single>
         <search>
-          <query>source=docker_inspect| spath Name | spath "State.Status" | search Name=$container_name$ State.Status=running | timechart count span=2mins</query>
+          <query>source=docker_inspect| spath Name | spath "State.Status" | search Name=$container_name$ State.Status=running | timechart count span=2mins partial=f</query>
           <earliest>$time.earliest$</earliest>
           <latest>$time.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -38,6 +38,7 @@
         <option name="numberPrecision">0</option>
         <option name="rangeColors">["0x65a637","0x6db7c6","0xf7bc38","0xf58f39","0xd93f3c"]</option>
         <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
         <option name="showSparkline">1</option>
         <option name="showTrendIndicator">1</option>
         <option name="trendColorInterpretation">standard</option>

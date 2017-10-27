@@ -5,7 +5,7 @@
 # 2. Add the following environment variable: SPLUNK_START_ARGS=--accept-license
 # e.g., docker run -e "SPLUNK_START_ARGS=--accept-license" splunk/splunk 
 
-# Support for Docker Compose v2, https://docs.docker.com/compose/overview/
+# Support for Docker Compose, https://docs.docker.com/compose/overview/
 version: '3'
 services:
   splunkenterprise:
@@ -14,7 +14,7 @@ services:
     image: splunk/splunk:7.0.0-monitor
     environment:
       SPLUNK_START_ARGS: --accept-license --answer-yes
-      SPLUNK_ENABLE_LISTEN: 9998
+      SPLUNK_ENABLE_LISTEN: 9997
       SPLUNK_ADD: tcp 1514
     volumes:
       - vsplunk-opt-splunk-etc:/opt/splunk/etc
@@ -30,7 +30,7 @@ services:
     image: splunk/universalforwarder:7.0.0-monitor
     environment:
       SPLUNK_START_ARGS: --accept-license --answer-yes
-      SPLUNK_FORWARD_SERVER: splunkenterprise:9998
+      SPLUNK_FORWARD_SERVER: splunkenterprise:9997
       SPLUNK_USER: root
     volumes:
       - vsplunkuf-opt-splunk-etc:/opt/splunk/etc
