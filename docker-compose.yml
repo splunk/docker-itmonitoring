@@ -16,17 +16,15 @@ services:
       SPLUNK_START_ARGS: --accept-license --answer-yes
       SPLUNK_ENABLE_LISTEN: 9997
       SPLUNK_ADD: tcp 1514
-      SPLUNK_USER: root
-    volumes_from:
-      - vsplunk
+#      SPLUNK_USER: root
     ports:
       - "8000:8000"
       - "9997:9997"
       - "8088:8088"
       - "1514:1514"
     volumes:
-      - vsplunkuf-opt-splunk-etc:/opt/splunk/etc
-      - vsplunkuf-opt-splunk-var:/opt/splunk/var 
+      - vsplunk-opt-splunk-etc:/opt/splunk/etc
+      - vsplunk-opt-splunk-var:/opt/splunk/var 
 
 volumes:
   vsplunk-opt-splunk-etc:
