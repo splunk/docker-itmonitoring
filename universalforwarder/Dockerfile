@@ -1,6 +1,6 @@
 FROM splunk/universalforwarder:7.0.0
 
-ENV SPLUNK_BACKUP_APP ${SPLUNK_BACKUP_DEFAULT_ETC}/etc/apps
+ENV SPLUNK_BACKUP_APP ${SPLUNK_HOME}/etc/apps
 
 # Enable File Input Monitor for docker host
 COPY ta-dockerlogs_fileinput ${SPLUNK_BACKUP_APP}/ta-dockerlogs_fileinput
