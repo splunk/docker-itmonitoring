@@ -233,17 +233,18 @@
   </row>
   <row>
     <panel>
+      <title>Tops</title>
       <table>
         <search>
-          <query>sourcetype=DockerTop  | join [ search sourcetype=DockerTop | eval LatestEventsTime=_time | stats first(LatestEventsTime) as LatestEventsTime by container_id ]  | eval EventTime=_time | eval vsz=vsz/1024/1024 | lookup docker_containername containerid as container_id OUTPUT containername as container_name  | search container_name=$container_name$ | stats sparkline(max(pcpu)) as pcpu_stats, sparkline(max(vsz)) as vsz_stats, first(pcpu) as pcpu, first(vsz) as vsz, first(etime) as etime, first(utime) as utime, first(EventTime) as et by pid, ppid, user, group, tty, comm, args, container_name, LatestEventsTime  | eval TimeDiff=LatestEventsTime-et | search TimeDiff=0 | sort -pcpu  | table container_name, pid, ppid, user, group, nice, pcpu_stats, pcpu, vsz_stats, vsz, etime, utime, tty, comm, args</query>
+          <query>sourcetype=DockerTop  | join [ search sourcetype=DockerTop | eval LatestEventsTime=_time | stats first(LatestEventsTime) as LatestEventsTime by container_id ]  | eval EventTime=_time | eval vsz=vsz/1024/1024 | lookup docker_containername.csv containerid as container_id OUTPUT containername as container_name  | search container_name=* | stats sparkline(max(vsz)) as vsz_stats, first(vsz) as vsz, first(etime) as etime, first(utime) as utime, first(EventTime) as et by pid, ppid, user, group, tty, comm, args, container_name, LatestEventsTime  | eval TimeDiff=LatestEventsTime-et | search TimeDiff=0 | table container_name, pid, ppid, user, group, vsz_stats, vsz, tty, comm, args</query>
           <earliest>$time.earliest$</earliest>
           <latest>$time.latest$</latest>
         </search>
-        <option name="wrap">true</option>
-        <option name="rowNumbers">false</option>
+        <option name="count">10</option>
         <option name="dataOverlayMode">none</option>
         <option name="drilldown">cell</option>
-        <option name="count">10</option>
+        <option name="rowNumbers">false</option>
+        <option name="wrap">true</option>
       </table>
     </panel>
   </row>
