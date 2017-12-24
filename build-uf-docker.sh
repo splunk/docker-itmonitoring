@@ -5,6 +5,3 @@ if [ -z $CURRENT ]; then
 fi
 
 docker build -t splunk/universalforwarder:7.0.0-monitor -f ./universalforwarder/Dockerfile $CURRENT
-
-
-
