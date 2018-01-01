@@ -1,0 +1,10 @@
+<nav search_view="search" color="#303030">
+  <view name="overview" default='true' />
+  <collection label="Search">
+    <view name="search" />
+    <view name="datasets" />
+    <view name="reports" />
+    <view name="alerts" />
+    <view name="dashboards" />
+  </collection>
+</nav>

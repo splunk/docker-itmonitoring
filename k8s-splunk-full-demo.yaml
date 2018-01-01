@@ -1,0 +1,248 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: splunk
+  name: splunk
+imagePullSecrets:
+   - name: <yourdockerhubsecret>
+---
+
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: splunk 
+rules:
+- apiGroups: ["", "apps","batch","extensions"]
+  resources:
+  - cronjobs
+  - componentstatuses
+  - configmaps
+  - controllerrevisions
+  - daemonsets
+  - deployments
+  - jobs
+  - replicasets
+  - replicationcontrollers
+  - resourcequotas
+  - scheduledjobs
+  - statefulsets
+  - namespaces
+  - nodes
+  - services
+  - secrets
+  - serviceaccounts
+  - endpoints
+  - pods
+  verbs: ["get", "list", "watch"]
+- nonResourceURLs: ["/metrics"]
+  verbs: ["get"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: splunk
+  name: splunk
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: splunk
+subjects:
+  - kind: ServiceAccount
+    name: splunk
+    namespace: default
+---
+
+apiVersion: extensions/v1beta1 
+kind: Deployment
+metadata:
+  labels:
+    name: splunkenterprise 
+  name: splunkenterprise
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: splunkenterprise
+    spec:
+      serviceAccountName: splunk
+      containers:
+      - name: splunkenterprise
+        image: splunk/splunk:7.0.0-monitor-k8s
+        imagePullPolicy: Always
+        env:
+         - name: SPLUNK_START_ARGS
+           value: --accept-license --answer-yes
+         - name: SPLUNK_ENABLE_LISTEN
+           value: "9997"
+         - name: SPLUNK_USER
+           value: root
+        #resources:
+        #  limits:
+        #    cpu: 1
+        #    memory: 500Mi
+        #  requests:
+        #    cpu: 200m
+        #    memory: 500Mi
+        ports:
+        - containerPort: 8000
+          name: splunkweb
+        - containerPort: 9997
+          name: splunkfwd
+        - containerPort: 8088
+          name: splunkhec
+        #volumeMounts:
+        #- name: splunk-etc
+        #  mountPath: /opt/splunk/etc/
+        #- name: splunk-var
+        #  mountPath: /opt/splunk/var
+      terminationGracePeriodSeconds: 30
+      #volumes:
+      #- name: splunk-etc
+      #  hostPath:
+      #    path: /var/lib/splunk-etc
+      #- name: splunk-var
+      #  hostPath: 
+      #    path: /var/lib/splunk-var
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: splunkenterprise
+spec:
+  type: LoadBalancer
+  selector:
+    app: splunkenterprise
+  ports:
+  - name: splunkweb
+    protocol: TCP
+    #spec.ports[0].nodePort: Invalid value: 8000: provided port is not in the valid range. The range of valid ports is 30000-32767
+#    nodePort: 30080
+    port: 8000
+    targetPort: 8000
+#     port:9000
+#     targetPort: 9000
+  - name: splunkfwd
+    protocol: TCP
+    port: 9997
+    targetPort: 9997
+  - name: splunkhec
+    protocol: TCP
+    port: 8088
+    targetPort: 8088
+
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: ta-k8s-logs
+  labels:
+    app: ta-k8s-logs
+    name: ta-k8s-logs 
+spec:
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      name: ta-k8s-logs
+      labels:
+        daemon: ta-k8s-logs
+    spec:
+      serviceAccountName: splunk
+      tolerations:
+      - operator: "Exists"
+        effect: "NoSchedule"
+      containers:
+      - name: ta-k8s-logs
+        image: splunk/universalforwarder:7.0.0-monitor-k8s-logs
+        imagePullPolicy: Always
+        env:
+         - name: SPLUNK_FORWARD_SERVER
+           value: splunkenterprise:9997
+         - name: SPLUNK_START_ARGS
+           value: --accept-license --answer-yes
+         - name: SPLUNK_USER
+           value: root
+        #resources:
+         # limits:
+         #   cpu: 1
+         #   memory: 200Mi
+         # requests:
+         #   cpu: 100m
+         #   memory: 200Mi
+        volumeMounts:
+        #- name: ufconfig
+        #  mountPath: /opt/splunk/etc/apps/search/local
+        - name: varlog
+          mountPath: /var/log
+          readOnly: true
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+        - name: dockersock
+          mountPath: /var/run/docker.sock
+          readOnly: true
+       # - name: splunk-uf-etc
+       #   mountPath: /opt/splunk/etc
+       # - name: splunk-uf-var
+       #   mountPath: /opt/splunk/var
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
+      - name: dockersock
+        hostPath:
+          path: /var/run/docker.sock
+      #- name: ufconfig
+      #  configMap:
+      #    name: splunk-uf-config
+      #- name: splunk-uf-etc
+      #  hostPath:
+      #    path: /var/lib/splunk-uf-etc
+      #- name: splunk-uf-var
+      #  hostPath: 
+      #    path: /var/lib/splunk-uf-var
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    name: ta-k8s-meta
+  name: ta-k8s-meta
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ta-k8s-meta
+    spec:
+      serviceAccountName: splunk
+      containers:
+      - name: ta-k8s-meta
+        image: splunk/universalforwarder:7.0.0-monitor-k8s-meta
+        imagePullPolicy: Always
+        env:
+         - name: SPLUNK_FORWARD_SERVER
+           value: splunkenterprise:9997
+         - name: SPLUNK_START_ARGS
+           value: --accept-license --answer-yes
+         - name: SPLUNK_USER
+           value: root
+        #resources:
+        #  limits:
+        #    cpu: 1
+        #    memory: 500Mi
+        #  requests:
+        #    cpu: 200m
+        #    memory: 500Mi
+      terminationGracePeriodSeconds: 30
+

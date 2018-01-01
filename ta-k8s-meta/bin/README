@@ -1,0 +1,1 @@
+These shell scripts are meant to be run INSIDE a k8s cluster, and require a service account be provisioned and rely on  jq. 

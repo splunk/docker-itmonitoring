@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app: ta-k8s-meta
+  name: ta-k8s-meta
+imagePullSecrets:
+#  - name: <yourdockerhubsecret>
+   - name: mattymodockerhub
+#  - name: mchenehubsecret
+---
+
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: ta-k8s-meta
+rules:
+- apiGroups: ["", "apps","batch","extensions"]
+  resources:
+  - cronjobs
+  - componentstatuses
+  - configmaps 
+  - controllerrevisions
+  - daemonsets
+  - deployments
+  - jobs
+  - replicasets
+  - replicationcontrollers
+  - resourcequotas
+  - scheduledjobs
+  - statefulsets
+  - namespaces
+  - nodes
+  - services
+  - secrets
+  - serviceaccounts
+  - endpoints
+  - pods
+  verbs: ["get", "list", "watch"]
+- nonResourceURLs: ["/metrics"]
+  verbs: ["get"]
+
+
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app: ta-k8s-meta
+  name: ta-k8s-meta
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ta-k8s-meta
+subjects:
+  - kind: ServiceAccount
+    name: ta-k8s-meta
+    namespace: default
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    name: ta-k8s-meta
+  name: ta-k8s-meta
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ta-k8s-meta
+    spec:
+      serviceAccountName: ta-k8s-meta
+      containers:
+      - name: ta-k8s-meta 
+#       image: splunk/universalforwarder:7.0.0-monitor-k8s-meta
+        image: matthewmodestino/ta-k8s-meta:latest
+#        image: mchene/universalforwarder:7.0.0-monitor-k8s-meta
+#        imagePullPolicy: Always  
+        env:
+         - name: SPLUNK_FORWARD_SERVER
+#           value: <splunk_host>:9997
+           value: splunkenterprise:9997
+#           value: mattymo.io:9997
+         - name: SPLUNK_START_ARGS
+           value: --accept-license --answer-yes
+         - name: SPLUNK_USER
+           value: root
+        #resources:
+        #  limits:
+        #    cpu: 1
+        #    memory: 500Mi
+        #  requests:
+        #    cpu: 200m
+        #    memory: 500Mi
+      terminationGracePeriodSeconds: 30

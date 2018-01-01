@@ -1,0 +1,37 @@
+<form>
+  <label>Daemon Sets</label>
+  <fieldset submitButton="false">
+    <input type="time" token="timepicker">
+      <label></label>
+      <default>
+        <earliest>-4h@m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="namespace">
+      <label>Namespace</label>
+      <choice value="*">ALL</choice>
+      <initialValue>*</initialValue>
+      <fieldForLabel>metadata.name</fieldForLabel>
+      <fieldForValue>metadata.name</fieldForValue>
+      <search>
+        <query>index=k8s sourcetype=k8s:api:namespaces
+| stats count by metadata.name</query>
+      </search>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <table>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:daemonsets" metadata.namespace=$namespace$
+| stats values(metadata.labels.*) AS labels.*, values(status.*) AS status.*, latest(metadata.creationTimestamp) AS age by metadata.name, metadata.namespace</query>
+          <earliest>$timepicker.earliest$</earliest>
+          <latest>$timepicker.latest$</latest>
+        </search>
+        <option name="drilldown">cell</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>

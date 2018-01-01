@@ -1,0 +1,76 @@
+<form>
+  <label>Pods</label>
+  <fieldset submitButton="false">
+    <input type="time" token="time">
+      <label>time</label>
+      <default>
+        <earliest>-4h@m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="namespace" searchWhenChanged="true">
+      <label>namespace</label>
+      <prefix>metadata.namespace=</prefix>
+      <fieldForLabel>metadata.name</fieldForLabel>
+      <fieldForValue>metadata.name</fieldForValue>
+      <search>
+        <query>index=k8s sourcetype=k8s:api:namespaces
+| stats count by metadata.name</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+      <choice value="*">ALL</choice>
+      <initialValue>*</initialValue>
+      <default>*</default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <table>
+        <title>click a pod for details</title>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:pods" $namespace$
+| stats values(status.containerStatuses{}.ready) AS ready, values(metadata.namespace) AS namespace, values(status.podIP) AS podIP, values(spec.nodeName) AS node,  values(metadata.creationTimestamp) AS creationTimestamp, values(spec.containers{}.image) AS image by metadata.name 
+| rename metadata.name AS name
+| sort - creationTimestamp</query>
+          <earliest>$time.earliest$</earliest>
+          <latest>$time.latest$</latest>
+        </search>
+        <option name="count">15</option>
+        <option name="drilldown">cell</option>
+        <drilldown>
+          <set token="pod">$click.value$</set>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Pod Details - $pod$</title>
+      <event>
+        <search>
+          <query>index=k8s sourcetype=k8s:api:pods $namespace$ $pod$</query>
+          <earliest>-30s@s</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="list.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </event>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>$pod$</title>
+      <event>
+        <title>Pod Events</title>
+        <search>
+          <query>index=k8s source=*$pod$*</query>
+          <earliest>$time.earliest$</earliest>
+          <latest>$time.latest$</latest>
+        </search>
+        <option name="list.drilldown">full</option>
+        <option name="refresh.display">progressbar</option>
+      </event>
+    </panel>
+  </row>
+</form>

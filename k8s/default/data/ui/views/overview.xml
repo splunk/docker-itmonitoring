@@ -1,0 +1,799 @@
+<form refresh="60">
+  <label>Kubernetes Overview</label>
+  <fieldset submitButton="false" autoRun="false">
+    <input type="time" token="timepicker">
+      <label></label>
+      <default>
+        <earliest>-4h@m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="namespace" searchWhenChanged="true">
+      <label>namspace</label>
+      <fieldForLabel>metadata.name</fieldForLabel>
+      <fieldForValue>metadata.name</fieldForValue>
+      <search>
+        <query>index=k8s sourcetype=k8s:api:namespaces
+| stats count by metadata.name</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+      <choice value="*">ALL</choice>
+      <initialValue>*</initialValue>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <single>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:services" metadata.namespace=$namespace$
+| timechart partial=f span=30s count(metadata.name) AS services</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">all</option>
+        <option name="height">115</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x3F6FDE","0x3F6FDE"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendInterval">-24h</option>
+        <option name="underLabel">Services</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <drilldown>
+          <link target="_self">/app/k8s/services?form.namespace=$namespace$</link>
+        </drilldown>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <search>
+          <query>index=k8s sourcetype=k8s:api*  sourcetype="k8s:api:deployments" metadata.namespace=$namespace$
+| timechart partial=f span=30s count(metadata.name) as deployments</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">all</option>
+        <option name="height">115</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x3F6FDE","0x3F6FDE"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">deployments</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <drilldown>
+          <link target="_self">/app/k8s/deployments?form.namespace=$namespace$</link>
+        </drilldown>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <search>
+          <query>index=k8s sourcetype=k8s:api:replicasets metadata.namespace=$namespace$
+| timechart partial=f span=30s count(metadata.name) AS replicasets</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">all</option>
+        <option name="height">115</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x3F6FDE","0x3F6FDE"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">Replica Sets</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <drilldown>
+          <link target="_self">/app/k8s/replica_sets?form.namespace=$namespace$</link>
+        </drilldown>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <search>
+          <query>index=k8s sourcetype=k8s:api:pods metadata.namespace=$namespace$
+| timechart partial=f span=30s count(metadata.name) AS pods</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">all</option>
+        <option name="height">115</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x3F6FDE","0x3F6FDE"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">pods</option>
+        <option name="unitPosition">before</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">0</option>
+        <drilldown>
+          <link target="_self">/app/k8s/pods?form.namespace=$namespace$</link>
+        </drilldown>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:daemonsets" metadata.namespace=$namespace$
+| timechart span=30s partial=f count(metadata.name) AS daemonsets</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">all</option>
+        <option name="height">115</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x3F6FDE","0x3F6FDE"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="trendInterval">auto</option>
+        <option name="underLabel">Daemon Sets</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <drilldown>
+          <link target="_self">/app/k8s/daemon_sets?form.namespace=$namespace$</link>
+        </drilldown>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:deployments" metadata.namespace=$namespace$
+| stats values(metadata.namespace) AS namespace, values(metadata.labels.*) AS labels.*, values(status.replicas) as replicas, values(status.readyReplicas) AS readyReplicas,  latest(metadata.creationTimestamp) AS age by metadata.name
+| fillnull value=0 replicas, readyReplicas
+| stats sum(replicas) AS replicas, sum(readyReplicas) AS readyReplicas
+| eval replicastatus=readyReplicas."/".replicas
+| fields replicastatus</query>
+          <earliest>-2m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">all</option>
+        <option name="height">115</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x3F6FDE","0x3F6FDE"]</option>
+        <option name="rangeValues">[18]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">Deployment - Pods  - Ready vs Desired</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <drilldown>
+          <link target="_self">/app/k8s/deployments?form.namespace=$namespace$</link>
+        </drilldown>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:daemonsets" metadata.namespace=$namespace$
+| stats values(metadata.labels.*) AS labels.*, values(status.*) AS status.*, latest(metadata.creationTimestamp) AS age by metadata.name
+| stats sum(status.numberReady) AS ready, sum(status.desiredNumberScheduled) AS desired
+| eval daemonstatus=ready."/".desired
+| fields daemonstatus</query>
+          <earliest>-2m@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">all</option>
+        <option name="height">115</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x65a637","0x6db7c6","0xf7bc38","0xf58f39","0xd93f3c"]</option>
+        <option name="rangeValues">[0,30,70,100]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">1</option>
+        <option name="showTrendIndicator">1</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">Daemonset - Pods - Ready vs. Desired</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">0</option>
+        <option name="useThousandSeparators">1</option>
+        <drilldown>
+          <link target="_self">/app/k8s/daemon_sets?form.namespace=$namespace$</link>
+        </drilldown>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <input type="link" token="needed">
+        <label>View k8s Cluster Log Trend:</label>
+        <choice value="link1">Overall Trend</choice>
+        <choice value="link2">Logs By Pod</choice>
+        <choice value="link3">Errors By Pod</choice>
+        <default>Overall Trend</default>
+        <change>
+          <condition value="link1">
+            <set token="showAll">true</set>
+            <unset token="showPod"></unset>
+            <unset token="errorPod"></unset>
+          </condition>
+          <condition value="link2">
+            <unset token="showAll"></unset>
+            <set token="showPod">true</set>
+            <unset token="errorPod"></unset>
+          </condition>
+          <condition value="link3">
+            <unset token="showAll"></unset>
+            <unset token="showPod"></unset>
+            <set token="errorPod">true</set>
+          </condition>
+        </change>
+      </input>
+      <chart depends="$showAll$">
+        <search>
+          <query>index=k8s sourcetype=kubernetes source=*_$namespace$_* 
+| timechart partial=f span=1m count</query>
+          <earliest>$timepicker.earliest$</earliest>
+          <latest>$timepicker.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.overlayFields">stderr</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">none</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="charting.seriesColors">[0x3F6FDE]</option>
+        <option name="height">287</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+      </chart>
+      <chart depends="$showPod$">
+        <search>
+          <query>index=k8s sourcetype="kubernetes" source=*_$namespace$_* | timechart partial=f span=1m count by host limit=0</query>
+          <earliest>$timepicker.earliest$</earliest>
+          <latest>$timepicker.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="charting.seriesColors">[0x3F6FDE,0x99B2CC,0x7094B8,0x4775A3,0x2E5C8A,0x24476B,0x1A334C,0x0F1F2E,0x050A0F]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">0</option>
+        <option name="trellis.size">small</option>
+        <option name="trellis.splitBy">host</option>
+      </chart>
+      <chart depends="$errorPod$">
+        <search>
+          <query>index=k8s sourcetype="kubernetes" ERROR OR WARN source=*_$namespace$_*
+| timechart partial=f span=1m count by host limit=0</query>
+          <earliest>$timepicker.earliest$</earliest>
+          <latest>$timepicker.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="charting.axisLabelsX.majorLabelStyle.overflowMode">ellipsisNone</option>
+        <option name="charting.axisLabelsX.majorLabelStyle.rotation">0</option>
+        <option name="charting.axisTitleX.visibility">visible</option>
+        <option name="charting.axisTitleY.visibility">visible</option>
+        <option name="charting.axisTitleY2.visibility">visible</option>
+        <option name="charting.axisX.abbreviation">none</option>
+        <option name="charting.axisX.scale">linear</option>
+        <option name="charting.axisY.abbreviation">none</option>
+        <option name="charting.axisY.scale">linear</option>
+        <option name="charting.axisY2.abbreviation">none</option>
+        <option name="charting.axisY2.enabled">0</option>
+        <option name="charting.axisY2.scale">inherit</option>
+        <option name="charting.chart">line</option>
+        <option name="charting.chart.bubbleMaximumSize">50</option>
+        <option name="charting.chart.bubbleMinimumSize">10</option>
+        <option name="charting.chart.bubbleSizeBy">area</option>
+        <option name="charting.chart.nullValueMode">gaps</option>
+        <option name="charting.chart.showDataLabels">none</option>
+        <option name="charting.chart.sliceCollapsingThreshold">0.01</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.chart.style">shiny</option>
+        <option name="charting.drilldown">all</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="charting.layout.splitSeries.allowIndependentYRanges">0</option>
+        <option name="charting.legend.labelStyle.overflowMode">ellipsisMiddle</option>
+        <option name="charting.legend.mode">standard</option>
+        <option name="charting.legend.placement">right</option>
+        <option name="charting.lineWidth">2</option>
+        <option name="charting.seriesColors">[0x3F6FDE,0x99B2CC,0x7094B8,0x4775A3,0x2E5C8A,0x24476B,0x1A334C,0x0F1F2E,0x050A0F]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">0</option>
+        <option name="trellis.size">small</option>
+        <option name="trellis.splitBy">host</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <single>
+        <search>
+          <query>| tstats dc(metadata.name) AS nodes WHERE index=k8s, sourcetype=k8s:api:nodes by _time span=30s 
+| timechart partial=f span=30s sum(nodes) AS nodes</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">all</option>
+        <option name="height">115</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x3F6FDE","0x3F6FDE"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">nodes</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+        <drilldown>
+          <link target="_self">/app/k8s/nodes</link>
+        </drilldown>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:nodes"
+| convert rmunit(allocatable.memory)
+| timechart span=30s partial=f sum(allocatable.cpu) AS allocatable.cpu</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="height">115</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x3F6FDE","0x3F6FDE"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">Total Allocatable CPU</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:pods" metadata.namespace=$namespace$
+| stats list(spec.containers{}.resources.requests.cpu) AS resources.requests.cpu by _time metadata.name, spec.nodeName
+| eval resources.requests.cpu=if(isnull('resources.requests.cpu'),0,'resources.requests.cpu')
+| mvexpand resources.requests.cpu
+| rex field=resources.requests.cpu "(?&lt;resources_requests_cpu_unit&gt;\D+)"
+| convert rmunit(resources.*)
+| eval cpu_request_divide = case(resources_requests_cpu_unit="m", 1000)
+| eval cpu_requests_converted = if(isnum(cpu_request_divide), 'resources.requests.cpu' / 'cpu_request_divide', 'resources.requests.cpu')
+| timechart partial=f span=30s sum(cpu_requests_converted) AS resources.requests.cpu</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="height">115</option>
+        <option name="numberPrecision">0.00</option>
+        <option name="rangeColors">["0x3F6FDE","0x3F6FDE"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">Total CPU Requests  - m</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:pods" metadata.namespace=$namespace$
+| stats list(spec.containers{}.resources.limits.cpu) AS resources.limits.cpu by _time, metadata.name, spec.nodeName
+| eval resources.limits.cpu=if(isnull('resources.limits.cpu'), 0, 'resources.limits.cpu')
+| mvexpand resources.limits.cpu
+| rex field=resources.limits.cpu "(?&lt;resources_limits_cpu_unit&gt;\D+)"
+| convert rmunit(resources.*)
+| eval cpu_limits_divide = case(resources_limits_cpu_unit="m", 1000)
+| eval cpu_limits_converted = if(isnum(cpu_limits_divide), 'resources.limits.cpu' / 'cpu_limits_divide', 'resources.limits.cpu')
+| timechart span=30s partial=f sum(cpu_limits_converted) AS resources.limits.cpu</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="height">115</option>
+        <option name="numberPrecision">0.00</option>
+        <option name="rangeColors">["0x3F6FDE","0x3F6FDE"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">Total CPU Limits - m</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:pods" metadata.namespace=$namespace$
+| stats list(spec.containers{}.resources.requests.memory) AS resources.requests.memory by _time metadata.name, spec.nodeName 
+| eval resources.requests.memory=if(isnull('resources.requests.memory'),0,'resources.requests.memory')
+| mvexpand resources.requests.memory 
+| rex field=resources.requests.memory "(?&lt;resources_requests_memory_unit&gt;\D+)" 
+| convert rmunit(resources.*) 
+| eval memory_request_divide = case(resources_requests_memory_unit="m", 1000) 
+| eval memory_requests_converted = if(isnum(memory_request_divide), 'resources.requests.memory' / 'memory_request_divide', 'resources.requests.memory') 
+| timechart span=30s partial=f sum(memory_requests_converted) AS resources.requests.memory</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="height">115</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x3F6FDE","0x3F6FDE"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">Total Memory Requests - Mi</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:pods" metadata.namespace=$namespace$
+| stats list(spec.containers{}.resources.limits.memory) AS resources.limits.memory by _time, metadata.name, spec.nodeName 
+| eval resources.limits.memory=if(isnull('resources.limits.memory'),0,'resources.limits.memory')
+| mvexpand resources.limits.memory 
+| rex field=resources.limits.memory "(?&lt;resources_limits_memory_unit&gt;\D+)" 
+| convert rmunit(resources.*) 
+| eval memory_request_divide = case(resources_limits_memory_unit="m", 1000) 
+| eval memory_limits_converted = if(isnum(memory_request_divide), 'resources.limits.memory' / 'memory_request_divide', 'resources.limits.memory') 
+| timechart span=30s partial=f sum(memory_limits_converted) AS resources.limits.memory</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="height">115</option>
+        <option name="numberPrecision">0</option>
+        <option name="rangeColors">["0x3F6FDE","0x3F6FDE"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">Total Memory Limits - Mi</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:nodes"
+| convert rmunit(allocatable.memory), rmunit(capacity.memory)
+| eval allocatable.memory='allocatable.memory'/1024/1024
+| timechart span=30s partial=f sum(allocatable.memory) AS allocatable.memory</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="colorBy">value</option>
+        <option name="colorMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="height">115</option>
+        <option name="numberPrecision">0.00</option>
+        <option name="rangeColors">["0x3F6FDE","0x3F6FDE"]</option>
+        <option name="rangeValues">[0]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="showSparkline">0</option>
+        <option name="showTrendIndicator">0</option>
+        <option name="trellis.enabled">0</option>
+        <option name="trellis.scales.shared">1</option>
+        <option name="trellis.size">medium</option>
+        <option name="trendColorInterpretation">standard</option>
+        <option name="trendDisplayMode">absolute</option>
+        <option name="underLabel">Total Allocatable Memory - Gi</option>
+        <option name="unitPosition">after</option>
+        <option name="useColors">1</option>
+        <option name="useThousandSeparators">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>CPU Requests/Limits/Capacity by Node</title>
+      <table>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:pods" 
+| stats values(spec.containers{}.resources.requests.cpu) AS resources.requests.cpu by spec.nodeName, metadata.name 
+| eval resources.limits.cpu=ifnull(resources.limits.cpu, 0)
+| mvexpand resources.requests.cpu 
+| rex field=resources.requests.cpu "(?&lt;resources_requests_cpu_unit&gt;\D+)" 
+| convert rmunit(resources.*) 
+| eval cpu_request_divide = case(resources_requests_cpu_unit="m", 1000) 
+| eval cpu_requests_converted = if(isnum(cpu_request_divide), 'resources.requests.cpu' / 'cpu_request_divide', 'resources.requests.cpu') 
+| stats sum(cpu_requests_converted) AS resources.requests.cpu by spec.nodeName 
+| appendcols 
+    [ search index=k8s sourcetype="k8s:api:pods" 
+    | stats values(spec.containers{}.resources.limits.cpu) AS resources.limits.cpu by spec.nodeName, metadata.name 
+    | eval resources.limits.cpu=ifnull(resources.limits.cpu, 0.00)
+    | mvexpand resources.limits.cpu
+    | rex field=resources.limits.cpu "(?&lt;resources_limits_cpu_unit&gt;\D+)"
+    | convert rmunit(resources.*)
+    | eval cpu_limit_divide = case(isnull(resources_limits_cpu_unit), 1, resources_limits_cpu_unit="m", 1000)
+    | eval cpu_limit_converted = if(isnum(cpu_limit_divide), 'resources.limits.cpu' / ' cpu_limit_divide', 'resources.limits.cpu') 
+    | stats sum(cpu_limit_converted) AS cpu_limits by spec.nodeName] 
+| appendcols 
+    [ search index=k8s sourcetype="k8s:api:nodes" 
+    | stats values(allocatable.*) AS allocatable.*, values(capacity.*) AS capacity.* by metadata.name]
+| fields spec.nodeName resources.requests.cpu cpu_limits allocatable.cpu</query>
+          <earliest>-2m@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Memory Requests/Limits/Capacity by Node</title>
+      <table>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:pods" 
+| stats list(spec.containers{}.resources.requests.memory) AS resources.requests.memory by spec.nodeName 
+| mvexpand resources.requests.memory 
+| rex field=resources.requests.memory "(?&lt;resources_requests_memory_unit&gt;\D+)" 
+| convert rmunit(resources.*) 
+| stats sum(resources.requests.memory) AS requests.memory.Ki by spec.nodeName 
+| appendcols 
+    [ search index=k8s sourcetype="k8s:api:pods" 
+    | stats values(spec.containers{}.resources.limits.memory) AS resources.limits.memory by metadata.name, spec.nodeName 
+    | mvexpand resources.limits.memory 
+    | rex field=resources.limits.memory "(?&lt;resources_limits_memory_unit&gt;\D+)" 
+    | convert rmunit(resources.*) 
+    | eval memory_request_divide = case(resources_limits_memory_unit="m", 1000) 
+    | eval memory_limits_converted = if(isnum(memory_request_divide), 'resources.limits.memory' / 'memory_request_divide', 'resources.limits.memory') 
+    | stats sum(memory_limits_converted) AS limits.memory.Ki by spec.nodeName] 
+| appendcols 
+    [ search index=k8s sourcetype="k8s:api:nodes" 
+    | stats values(allocatable.*) AS allocatable.*, values(capacity.*) AS capacity.* by metadata.name
+    | rex field=allocatable.memory "(?&lt;allocatable_memory_unit&gt;\D+)"
+    | convert rmunit(allocatable.memory)
+    | eval "allocatable.memory.Gi"= round('allocatable.memory'/1024/1024,2)]
+| fields spec.nodeName requests.memory.Ki limits.memory.Ki allocatable.memory.Gi</query>
+          <earliest>-30s@s</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Pods per Node</title>
+      <table>
+        <search>
+          <query>| tstats count WHERE index=k8s, sourcetype=k8s:api:pods, status.containerStatuses{}.ready=true by spec.nodeName
+| stats  sum(count) AS pods by spec.nodeName
+| appendcols
+    [search index=k8s sourcetype="k8s:api:nodes"
+| stats values(allocatable.pods) AS allocatable.pods by metadata.name]
+| fields spec.nodeName pods allocatable.pods</query>
+          <earliest>-30s@s</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Nodes</title>
+      <table>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:nodes"
+| stats values(nodeInfo.osImage) AS osImage, values(nodeInfo.kubeletVersion) AS kubeletVersion, values(nodeInfo.containerRuntimeVersion) AS containerRuntimeVersion, values(metadata.creationTimestamp) AS creationTimestamp, values(externalID) AS externalID, values(providerID) AS providerID, values(metadata.labels.beta.kubernetes.io/instance-type) AS instance-type,  values(metadata.labels.beta.kubernetes.io/os) AS os, values(metadata.labels.kubernetes.io/role) AS role,  values(conditions{}.message) AS message, max(_time) AS "lastSeen" by metadata.name
+| eval lastSeen=strftime(lastSeen, "%Y-%m-%d %H:%M:%S")
+| rename metadata.name AS name
+| sort - role</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">10</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+</form>

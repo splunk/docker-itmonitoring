@@ -1,0 +1,30 @@
+<form>
+  <label>Nodes</label>
+  <description>nodes</description>
+  <fieldset submitButton="false">
+    <input type="time" token="field1">
+      <label></label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <table>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:nodes"
+| stats values(nodeInfo.osImage) AS osImage, values(nodeInfo.kubeletVersion) AS kubeletVersion, values(nodeInfo.containerRuntimeVersion) AS containerRuntimeVersion, values(metadata.creationTimestamp) AS creationTimestamp, values(externalID) AS externalID, values(providerID) AS providerID, values(metadata.labels.beta.kubernetes.io/instance-type) AS instance-type,  values(metadata.labels.beta.kubernetes.io/os) AS os, values(metadata.labels.kubernetes.io/role) AS role,  values(conditions{}.message) AS message, max(_time) AS "lastSeen" by metadata.name
+| eval lastSeen=strftime(lastSeen, "%Y-%m-%d %H:%M:%S")
+| rename metadata.name AS name
+| sort - role</query>
+          <earliest>-2m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">cell</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>
