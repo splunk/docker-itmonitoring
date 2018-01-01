@@ -4,4 +4,4 @@ if [ -z $CURRENT ]; then
 	CURRENT=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 fi
 
-#docker build -t splunk/universalforwarder:7.0.0-monitor-k8s-meta -f ./docker-images/ta-k8s-meta-image/Dockerfile $CURRENT
+docker build -t splunk/universalforwarder:7.0.0-monitor-k8s-meta -f ./docker-images/ta-k8s-meta-image/Dockerfile $CURRENT

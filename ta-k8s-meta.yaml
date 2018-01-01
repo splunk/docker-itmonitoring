@@ -5,9 +5,7 @@ metadata:
     app: ta-k8s-meta
   name: ta-k8s-meta
 imagePullSecrets:
-#  - name: <yourdockerhubsecret>
-   - name: mattymodockerhub
-#  - name: mchenehubsecret
+   - name: <yourdockerhubsecret>
 ---
 
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -74,15 +72,11 @@ spec:
       serviceAccountName: ta-k8s-meta
       containers:
       - name: ta-k8s-meta 
-#       image: splunk/universalforwarder:7.0.0-monitor-k8s-meta
-        image: matthewmodestino/ta-k8s-meta:latest
-#        image: mchene/universalforwarder:7.0.0-monitor-k8s-meta
-#        imagePullPolicy: Always  
+        image: splunk/universalforwarder:7.0.0-monitor-k8s-meta
+        imagePullPolicy: Always  
         env:
          - name: SPLUNK_FORWARD_SERVER
-#           value: <splunk_host>:9997
-           value: splunkenterprise:9997
-#           value: mattymo.io:9997
+           value: <splunk_host>:9997
          - name: SPLUNK_START_ARGS
            value: --accept-license --answer-yes
          - name: SPLUNK_USER
