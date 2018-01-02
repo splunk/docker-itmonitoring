@@ -80,11 +80,11 @@ https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-binary-v
 * Splunk Enterprise host - splunkenterprise: the Splunk host name used to by the UF to forward logs and metadata. The two Universal Forwarders (UFs) (1 deployed as a daemonset and the other as a Deployment type) require a value for the SPLUNK_FORWARD_SERVER.  If you use the k8s-splunk-full-demo.yaml, the assumption is that you will be sending the data to the instance of Splunk Enterprise created as a Deployment type in the yaml. 
 
 2. Build the 3 required images:
-* ta-k8s-logs: docker build -t splunk/universalforwarder:7.0.0-monitor-k8s-logs -f ./docker-images/ta-k8s-logs-image/Dockerfile
-* ta-k8s-meta: docker build -t splunk/universalforwarder:7.0.0-monitor-k8s-meta -f ./docker-images/ta-k8s-meta-image/Dockerfile
-* k8s: docker build -t splunk/splunk:7.0.0-monitor-k8s -f ./docker-images/enterprise-k8s/Dockerfile
+* ta-k8s-logs: `docker build -t splunk/universalforwarder:7.0.0-monitor-k8s-logs -f ./docker-images/ta-k8s-logs-image/Dockerfile`
+* ta-k8s-meta: `docker build -t splunk/universalforwarder:7.0.0-monitor-k8s-meta -f ./docker-images/ta-k8s-meta-image/Dockerfile`
+* k8s: docker `build -t splunk/splunk:7.0.0-monitor-k8s -f ./docker-images/enterprise-k8s/Dockerfile`
 
-3. Publish the 3 images to the trusted registery of your choice, e.g., docker push splunk/universalforwarder:7.0.0-monitor-k8s-meta, docker push splunk/universalforwarder:7.0.0-monitor-k8s-logs.
+3. Publish the 3 images to the trusted registery of your choice, e.g., `docker push splunk/universalforwarder:7.0.0-monitor-k8s-meta`, `docker push splunk/universalforwarder:7.0.0-monitor-k8s-logs`.
 
 4. Update the 3 image names you created in the k8s-splunk-full-demo.yaml.  Search for "image:" and replace the existing images for your own image names.
 
@@ -92,7 +92,7 @@ https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-binary-v
 
 6. Create port forwarding to access Splunk Web UI
 * Run the following command: kubectl get pods
-* Copy the name for the Splunk Enterprise pod and run the following command: kubectl port-forward <pod_name> 8000:8000
+* Copy the name for the Splunk Enterprise pod and run the following command: `kubectl port-forward <pod_name> 8000:8000`
 * Go to the following web URL using your browser: http://localhost:8000 
 
 Note, if you want to deploy the sample app to your own Splunk Enterprise instance / cluster, simply run the following commands to create an SPL file:
