@@ -82,13 +82,13 @@ https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-binary-v
 2. Build the 3 required images:
 * ta-k8s-logs: `docker build -t splunk/universalforwarder:7.0.0-monitor-k8s-logs -f ./docker-images/ta-k8s-logs-image/Dockerfile`
 * ta-k8s-meta: `docker build -t splunk/universalforwarder:7.0.0-monitor-k8s-meta -f ./docker-images/ta-k8s-meta-image/Dockerfile`
-* k8s: docker `build -t splunk/splunk:7.0.0-monitor-k8s -f ./docker-images/enterprise-k8s/Dockerfile`
+* k8s: `docker build -t splunk/splunk:7.0.0-monitor-k8s -f ./docker-images/enterprise-k8s/Dockerfile`
 
 3. Publish the 3 images to the trusted registery of your choice, e.g., `docker push splunk/universalforwarder:7.0.0-monitor-k8s-meta`, `docker push splunk/universalforwarder:7.0.0-monitor-k8s-logs`.
 
 4. Update the 3 image names you created in the k8s-splunk-full-demo.yaml.  Search for "image:" and replace the existing images for your own image names.
 
-5. Deploy Splunk Enterprise and the two Splunk UFs: kubectl create -f k8s-splunk-full-demo.yaml 
+5. Deploy Splunk Enterprise and the two Splunk UFs: `kubectl create -f k8s-splunk-full-demo.yaml` 
 
 6. Create port forwarding to access Splunk Web UI
 * Run the following command: kubectl get pods
