@@ -12,7 +12,7 @@ Minimum Requirements:
 ## Splunk UF with logs collection TA: ta-k8s-logs
 Splunk UF daemonset to collect docker json logs. 
 
-Default configuration is to monitor /var/log/containers/*.log, also contains a disabled input for kubernetes advanced audit -  /var/log/kube-apiserver-audit.log - If you have configured your apiserver for advanced auditting, you can enable this input. 
+Default configuration is to monitor `/var/log/containers/*.log`, also contains a disabled input for kubernetes advanced audit -  `/var/log/kube-apiserver-audit.log` - If you have configured your apiserver for advanced auditting, you can enable this input. 
 
 New inputs can be added via config map in the yaml or by editing the app and rebuilding the docker container. 
 
@@ -39,8 +39,8 @@ The k8s app currently configures an index called k8s that is hardcoded into the 
 Future iteration may update the dash with macros to allow configuration of different indexes.
 
 The app currently contains props/transform configurations:
-1.sourcetype=kubernetes - index docker JSON driver logs in JSON format or by "unwrapping" the JSON from your stderr/stdout logs and using a linebreaker to provide multiline logging support.
-2.sourcetype=k8s:api:* - INDEXED_EXTRACTIONS for the API metadata
+* sourcetype=kubernetes - index docker JSON driver logs in JSON format or by "unwrapping" the JSON from your stderr/stdout logs and using a linebreaker to provide multiline logging support.
+* sourcetype=k8s:api:* - sourcetypes for the API metadata
 
 The exact configuration for your environment will vary greatly on your logging practices. See props.conf
 
@@ -75,14 +75,14 @@ https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-binary-v
 
 ## Deploying Splunk Enterprise and the 2 Splunk UFs
 1. Update these parameters in the k8s-splunk-full-demo.yaml yaml files
-i) <yourdockerhubsecret>: secret to allow image pulls from a dockerhub repo
+* \<yourdockerhubsecret\> : secret to allow image pulls from a dockerhub repo
 
-ii) Splunk Enterprise host - splunkenterprise: the Splunk host name used to by the UF to forward logs and metadata. The two Universal Forwarders (UFs) (1 deployed as a daemonset and the other as a Deployment type) require a value for the SPLUNK_FORWARD_SERVER.  If you use the k8s-splunk-full-demo.yaml, the assumption is that you will be sending the data to the instance of Splunk Enterprise created as a Deployment type in the yaml. 
+* Splunk Enterprise host - splunkenterprise: the Splunk host name used to by the UF to forward logs and metadata. The two Universal Forwarders (UFs) (1 deployed as a daemonset and the other as a Deployment type) require a value for the SPLUNK_FORWARD_SERVER.  If you use the k8s-splunk-full-demo.yaml, the assumption is that you will be sending the data to the instance of Splunk Enterprise created as a Deployment type in the yaml. 
 
 2. Build the 3 required images:
-i) ta-k8s-logs: docker build -t splunk/universalforwarder:7.0.0-monitor-k8s-logs -f ./docker-images/ta-k8s-logs-image/Dockerfile
-ii) ta-k8s-meta: docker build -t splunk/universalforwarder:7.0.0-monitor-k8s-meta -f ./docker-images/ta-k8s-meta-image/Dockerfile
-ii) k8s: docker build -t splunk/splunk:7.0.0-monitor-k8s -f ./docker-images/enterprise-k8s/Dockerfile
+* ta-k8s-logs: docker build -t splunk/universalforwarder:7.0.0-monitor-k8s-logs -f ./docker-images/ta-k8s-logs-image/Dockerfile
+* ta-k8s-meta: docker build -t splunk/universalforwarder:7.0.0-monitor-k8s-meta -f ./docker-images/ta-k8s-meta-image/Dockerfile
+* k8s: docker build -t splunk/splunk:7.0.0-monitor-k8s -f ./docker-images/enterprise-k8s/Dockerfile
 
 3. Publish the 3 images to the trusted registery of your choice, e.g., docker push splunk/universalforwarder:7.0.0-monitor-k8s-meta, docker push splunk/universalforwarder:7.0.0-monitor-k8s-logs.
 
@@ -91,11 +91,11 @@ ii) k8s: docker build -t splunk/splunk:7.0.0-monitor-k8s -f ./docker-images/ente
 5. Deploy Splunk Enterprise and the two Splunk UFs: kubectl create -f k8s-splunk-full-demo.yaml 
 
 6. Create port forwarding to access Splunk Web UI
-i) Run the following command: kubectl get pods
-ii) Copy the name for the Splunk Enterprise pod and run the following command: kubectl port-forward <pod_name> 8000:8000
-ii) Go to the following web URL using your browser: http://localhost:8000 
+* Run the following command: kubectl get pods
+* Copy the name for the Splunk Enterprise pod and run the following command: kubectl port-forward <pod_name> 8000:8000
+* Go to the following web URL using your browser: http://localhost:8000 
 
 Note, if you want to deploy the sample app to your own Splunk Enterprise instance / cluster, simply run the following commands to create an SPL file:
-i) gtar -cvf ./app-k8s.tar ./k8s/
-ii) gzip ./app-k8s.tar
-iii) mv ./app-k8s.tar.gz ./app-k8s.spl
+* gtar -cvf ./app-k8s.tar ./k8s/
+* gzip ./app-k8s.tar
+* mv ./app-k8s.tar.gz ./app-k8s.spl
