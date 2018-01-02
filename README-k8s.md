@@ -91,9 +91,9 @@ https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-binary-v
 5. Deploy Splunk Enterprise and the two Splunk UFs: `kubectl create -f k8s-splunk-full-demo.yaml` 
 
 6. Create port forwarding to access Splunk Web UI
-* Run the following command: kubectl get pods
+* Run the following command: `kubectl get pods`
 * Copy the name for the Splunk Enterprise pod and run the following command: `kubectl port-forward <pod_name> 8000:8000`
-* Go to the following web URL using your browser: http://localhost:8000 
+* Go to the following web URL using your browser: `http://localhost:8000` 
 
 Note, if you want to deploy the sample app to your own Splunk Enterprise instance / cluster, simply run the following commands to create an SPL file:
 * gtar -cvf ./app-k8s.tar ./k8s/
