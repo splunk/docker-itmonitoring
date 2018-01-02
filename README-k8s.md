@@ -71,7 +71,7 @@ We have tested against Heptio's AWS Quickstart (1.8.4):
 https://aws.amazon.com/quickstart/architecture/heptio-kubernetes/ 
 
 And against Minikube on OSX Sierra(1.8.0):
-https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl-binary-via-curl
+https://github.com/kubernetes/minikube/releases
 
 ## Deploying Splunk Enterprise and the 2 Splunk UFs
 1. Update these parameters in the k8s-splunk-full-demo.yaml yaml files
