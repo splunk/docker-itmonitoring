@@ -6,7 +6,7 @@ ENV SPLUNK_BACKUP_APP ${SPLUNK_BACKUP_DEFAULT_ETC}/etc/apps
 # install curl vim and jq
 RUN apt-get update && apt-get install -y \
     curl \
-    vim  \
+#    vim  \
     jq
 
 COPY ta-k8s-meta ${SPLUNK_BACKUP_APP}/ta-k8s-meta/
