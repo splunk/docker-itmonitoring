@@ -10,7 +10,7 @@ Minimum Requirements:
 - kubernetes v1.8
 
 ## Table of Contents
-* **[Description of Container Images & Deployment YAML](#description-of-container-images---deployment-yaml)**
+* **[Description of Container Images & Deployment YAML](#description-of-container-images--deployment-yaml)**
 * **[Getting Started](#getting-started)**
      * **[Create a Secret for your Service Account](#create-a-secret-for-your-service-account)**
      * **[Prepare your k8s cluster](#prepare-your-k8s-cluster)**
