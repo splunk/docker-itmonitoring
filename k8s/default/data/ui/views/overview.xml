@@ -292,7 +292,7 @@
       </input>
       <chart depends="$showAll$">
         <search>
-          <query>index=k8s sourcetype=kubernetes source=*_$namespace$_* 
+          <query>index=k8s source=*_$namespace$_* 
 | timechart partial=f span=1m count</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
@@ -336,7 +336,7 @@
       </chart>
       <chart depends="$showPod$">
         <search>
-          <query>index=k8s sourcetype="kubernetes" source=*_$namespace$_* | timechart partial=f span=1m count by host limit=0</query>
+          <query>index=k8s source=*_$namespace$_* | timechart partial=f span=1m count by host limit=0</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
           <sampleRatio>1</sampleRatio>
@@ -378,7 +378,7 @@
       </chart>
       <chart depends="$errorPod$">
         <search>
-          <query>index=k8s sourcetype="kubernetes" ERROR OR WARN source=*_$namespace$_*
+          <query>index=k8s ERROR OR WARN source=*_$namespace$_*
 | timechart partial=f span=1m count by host limit=0</query>
           <earliest>$timepicker.earliest$</earliest>
           <latest>$timepicker.latest$</latest>
