@@ -9,6 +9,14 @@ Minimum Requirements:
 - minikube v0.24
 - kubernetes v1.8
 
+## Table of Contents
+* **[Description of Container Images & Deployment YAML](#description-of-container-images---deployment-yaml)**
+* **[Getting Started](#getting-started)**
+     * **[Create a Secret for your Service Account](#create-a-secret-for-your-service-account)**
+     * **[Prepare your k8s cluster](#prepare-your-k8s-cluster)**
+     * **[Configuration and Deployment](#configuration-and-deployment)**
+
+# Description of Container Images & Deployment YAML
 ## Splunk UF with logs collection TA: ta-k8s-logs
 Splunk UF deployed as a `daemonset` type to collect docker JSON logs. 
 
@@ -57,8 +65,8 @@ Contains the Dockerfiles to build the 3 new images used e.g.,
 3. splunk/splunk:7.0.0-monitor-k8s
 
 # Getting Started
-## Create a secret for your Service Account to use for dockerhub image pulls
-You will need to create a docker secret to pull the images for your trusted registry.
+## Create a Secret for your Service Account
+You will need to create a docker secret to pull the images for your container trusted registry.
 ```
 kubectl create secret docker-registry yourdockerhubsecret --docker-server=https://index.docker.io/v1/ --docker-username=<dockerhub_username> --docker-password=<dockerhub_password> --docker-email=<dockerhub_email>
 ```
@@ -72,7 +80,8 @@ https://aws.amazon.com/quickstart/architecture/heptio-kubernetes/
 - Minikube on OSX Sierra (1.8.0):
 https://github.com/kubernetes/minikube/releases
 
-## Deploying Splunk Enterprise and the 2 Splunk UFs
+## Configuration and Deployment
+Here are the step-by-step instructions to deploy Splunk Enterprise and the 2 Splunk UFs:
 1. Update these parameters in the `k8s-splunk-full-demo.yaml` yaml files
 * \<yourdockerhubsecret\> : secret to allow image pulls from a Docker Hub repo
 
