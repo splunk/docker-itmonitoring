@@ -1,0 +1,47 @@
+<form>
+  <label>Replica Sets</label>
+  <fieldset submitButton="false">
+    <input type="time" token="field1">
+      <label></label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="namespace">
+      <label>namespace</label>
+      <choice value="*">ALL</choice>
+      <fieldForLabel>metadata.name</fieldForLabel>
+      <fieldForValue>metadata.name</fieldForValue>
+      <search>
+        <query>index=k8s sourcetype=k8s:api:namespaces
+| stats count by metadata.name</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+      <default>*</default>
+      <initialValue>*</initialValue>
+      <prefix>metadata.namespace=</prefix>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <table>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:replicasets" $namespace$
+| stats values(metadata.labels.*) AS metadata.labels.*, values(spec.selector.*) AS spec.selector.*, values(metadata.annotations.deployment.kubernetes.io/*) AS metadata.annotations.deployment.kubernetes.io/*, values(status.*) AS status.*, values(spec.template.spec.containers{}.image) AS spec.template.spec.containers{}.image, max(metadata.creationTimestamp) count by _time metadata.name, metadata.namespace</query>
+          <earliest>-30s</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">false</option>
+      </table>
+    </panel>
+  </row>
+</form>

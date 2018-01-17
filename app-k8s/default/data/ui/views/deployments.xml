@@ -1,0 +1,80 @@
+<form>
+  <label>Deployments</label>
+  <fieldset submitButton="false">
+    <input type="time" token="timepicker">
+      <label></label>
+      <default>
+        <earliest>-4h@m</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="namespace" searchWhenChanged="true">
+      <label>namespace</label>
+      <search>
+        <query>index=k8s sourcetype=k8s:api:namespaces
+| stats count by metadata.name</query>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </search>
+      <choice value="*">ALL</choice>
+      <default>*</default>
+      <fieldForLabel>metadata.name</fieldForLabel>
+      <fieldForValue>metadata.name</fieldForValue>
+      <prefix>metadata.namespace=</prefix>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Deployments</title>
+      <table>
+        <title>click a deployment for details</title>
+        <search>
+          <query>index=k8s sourcetype="k8s:api:deployments" $namespace$
+| stats values(metadata.namespace) AS namespace, values(metadata.labels.*) AS labels.*, values(status.replicas) as replicas, values(status.readyReplicas) AS readyReplicas,  latest(metadata.creationTimestamp) AS age by metadata.name
+| fillnull value=0 replicas, readyReplicas
+| eval age=strptime(age,"%Y-%m-%dT%H:%M:%S") 
+| eval age=round(now()-age,0)
+| eval age=tostring(age,"duration") 
+| sort - age</query>
+          <earliest>-2m@m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">cell</option>
+        <drilldown>
+          <set token="deployments">$click.value$</set>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Deployments Detail</title>
+      <event>
+        <search>
+          <query>index=k8s sourcetype=k8s:api:deployments $namespace$ metadata.name=$deployments$</query>
+          <earliest>-30s@s</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="list.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </event>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Pods</title>
+      <table>
+        <search>
+          <query>index=k8s sourcetype=k8s:api:pods $namespace$ $deployments$
+| stats values(metadata.name) AS pods</query>
+          <earliest>-30s@s</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">cell</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+</form>
