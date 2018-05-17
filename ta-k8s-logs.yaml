@@ -77,7 +77,7 @@ spec:
         effect: "NoSchedule"
       containers:
       - name: ta-k8s-logs
-        image: splunk/universalforwarder:7.0.0-monitor-k8s-logs
+        image: splunk/universalforwarder:7.0.3-monitor-k8s-logs
         imagePullPolicy: Always 
         env:
          - name: SPLUNK_FORWARD_SERVER

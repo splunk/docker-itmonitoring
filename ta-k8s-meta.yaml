@@ -72,7 +72,7 @@ spec:
       serviceAccountName: ta-k8s-meta
       containers:
       - name: ta-k8s-meta 
-        image: splunk/universalforwarder:7.0.0-monitor-k8s-meta
+        image: splunk/universalforwarder:7.0.3-monitor-k8s-meta
         imagePullPolicy: Always  
         env:
          - name: SPLUNK_FORWARD_SERVER

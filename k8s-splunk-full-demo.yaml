@@ -71,7 +71,7 @@ spec:
       serviceAccountName: splunk
       containers:
       - name: splunkenterprise
-        image: splunk/splunk:7.0.0-monitor-k8s
+        image: splunk/splunk:7.0.3-monitor-k8s
         imagePullPolicy: Always
         env:
          - name: SPLUNK_START_ARGS
@@ -158,7 +158,7 @@ spec:
         effect: "NoSchedule"
       containers:
       - name: ta-k8s-logs
-        image: splunk/universalforwarder:7.0.0-monitor-k8s-logs
+        image: splunk/universalforwarder:7.0.3-monitor-k8s-logs
         imagePullPolicy: Always
         env:
          - name: SPLUNK_FORWARD_SERVER
@@ -228,7 +228,7 @@ spec:
       serviceAccountName: splunk
       containers:
       - name: ta-k8s-meta
-        image: splunk/universalforwarder:7.0.0-monitor-k8s-meta
+        image: splunk/universalforwarder:7.0.3-monitor-k8s-meta
         imagePullPolicy: Always
         env:
          - name: SPLUNK_FORWARD_SERVER
