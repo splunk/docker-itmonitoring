@@ -11,7 +11,7 @@ services:
   splunkenterprise:
     #build: .
     hostname: splunkenterprise
-    image: splunk/splunk:7.0.0-monitor
+    image: splunk/splunk:7.0.3-monitor
     environment:
       SPLUNK_START_ARGS: --accept-license --answer-yes
       SPLUNK_ENABLE_LISTEN: 9997
@@ -27,7 +27,7 @@ services:
   splunkuniversalforwarder:
 #    build: .
     hostname: splunkuniversalforwarder
-    image: splunk/universalforwarder:7.0.0-monitor
+    image: splunk/universalforwarder:7.0.3-monitor
     environment:
       SPLUNK_START_ARGS: --accept-license --answer-yes
       SPLUNK_FORWARD_SERVER: splunkenterprise:9997
